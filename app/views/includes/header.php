@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <title><?php echo SITENAME; ?></title>
 </head>
@@ -21,7 +22,7 @@
 
 
 
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-5">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                     <span class="navbar-toggler-icon"></span>
@@ -37,19 +38,17 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <?php
-    if (isLoggedIn()) {
-      echo '<li class="nav-item"><a class="nav-link" href="/Quiz/TwoFA/Setup"><i class="fa fa-key" aria-hidden="true"></i> 2FA </a></li>';
-      echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Login/logout"><i class="fa-solid fa-sign-out"></i> Logout  '. $_SESSION['user_username'].'</a></li>';
-      if($_SESSION['admin']){
-        echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Admin"><i class="fa-solid fa-user"></i> Admin </a></li>';
-
-      }
-    } 
-    else {
-      echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Login/Create"><i class="fa-solid fa-user-plus"></i> Sign Up</a></li>
+                        if (isLoggedIn()) {
+                            echo '<li class="nav-item"><a class="nav-link" href="/Quiz/TwoFA/Setup"><i class="fa fa-key" aria-hidden="true"></i> 2FA </a></li>';
+                            echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Login/logout"><i class="fa-solid fa-sign-out"></i> Logout  ' . $_SESSION['user_username'] . '</a></li>';
+                            if ($_SESSION['admin']) {
+                                echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Admin"><i class="fa-solid fa-user"></i> Admin </a></li>';
+                            }
+                        } else {
+                            echo '<li class="nav-item"><a class="nav-link" href="/Quiz/Login/Create"><i class="fa-solid fa-user-plus"></i> Sign Up</a></li>
           <li class="nav-item"><a class="nav-link" href="/Quiz/Login/"><i class="fa-solid fa-right-to-bracket"></i> Login</a></li>';
-    }
-    ?>
+                        }
+                        ?>
                     </ul>
                 </div>
             </div>

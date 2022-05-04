@@ -1,0 +1,11 @@
+.admin-card:hover {
+  box-shadow: 0px 0px 20px -10px #54b3d6;
+}
+
+.admin-card {
+  cursor: pointer;
+  color: black;
+  margin: 0 -0.25rem;
+  padding: 0 0.25rem;
+  transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
