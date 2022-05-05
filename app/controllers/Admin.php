@@ -6,7 +6,7 @@ class Admin extends Controller
         if (!$_SESSION['admin']) {
             header('Location: /Quiz/Home');
         } else {
-            $this->adminModel = $this->model('adminModel');
+            $this->studentModel = $this->model('studentModel');
             $this->quizModel = $this->model('quizModel');
         }
     }
@@ -14,7 +14,7 @@ class Admin extends Controller
 
     public function index()
     {
-        $quizes =  $this->adminModel->getQuizes();
+        $quizes =  $this->studentModel->getQuizes();
         $questions = $this->quizModel->getAllQuestions();
 
 
@@ -26,7 +26,7 @@ class Admin extends Controller
     }
     public function quizes()
     {
-        $quizes =  $this->adminModel->getQuizes();
+        $quizes =  $this->studentModel->getQuizes();
 
         $data = [
             'quizes' => $quizes

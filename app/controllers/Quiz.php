@@ -3,7 +3,11 @@ class Quiz extends Controller
 {
     public function __construct()
     {
-        $this->quizModel = $this->model('quizModel');
+        if (!$_SESSION['admin']) {
+            header('Location: /Quiz/Home');
+        } else {
+            $this->quizModel = $this->model('quizModel');
+        }
     }
 
     public function index($quiz_id = null)
@@ -23,15 +27,19 @@ class Quiz extends Controller
 
     public function create()
     {
-        if (!isset($_POST['name'])) {
-            $this->view('Quiz/create');
-        } else {
-            $data = [
-                'name' => trim($_POST['name'])
-            ];
-            if ($this->quizModel->createQuiz($data)) {
-                header('Location: /Quiz/Admin/Quizes');
+        if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+            if (!isset($_POST['name'])) {
+                $this->view('Quiz/create');
+            } else {
+                $data = [
+                    'name' => trim($_POST['name'])
+                ];
+                if ($this->quizModel->createQuiz($data)) {
+                    header('Location: /Quiz/Admin/Quizes');
+                }
             }
+        } else {
+            header('Location: /Quiz/Home');
         }
     }
 }

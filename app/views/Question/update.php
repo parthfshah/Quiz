@@ -59,6 +59,10 @@ if (isset($data['question'])) {
             <label for="correct">Correct Ans</label>
             <input name="correct_ans" type="text" class="form-control" id="correct" value="<?php echo $question->correct_ans ?>">
         </div>
+        <div class="form-group">
+            <label for="correct">Grade</label>
+            <input name="grade" type="text" class="form-control" id="correct" value="<?php echo $question->grade ?>">
+        </div>
 
         <div class="pt-1 mb-4">
             <button class="btn btn-primary" type="submit" name="update">Update Question</button>

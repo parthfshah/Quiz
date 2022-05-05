@@ -9,6 +9,7 @@
         <td>Question Text</td>
         <td>Options</td>
         <td>Correct Answer</td>
+        <td>Grade</td>
         <td colspan="3" class="text-center"> Actions</td>
     </tr>
     <?php
@@ -26,13 +27,14 @@
         echo "<td>" . $quiz_link . $question->quiz_id . " </a></td>";
         echo "<td>$question->text</td>";
 
-        echo "<td>";
-        echo $question->option_1;
-        echo $question->option_2;
-        echo $question->option_3;
-        echo $question->option_4;
-        echo "</td>";
+        echo "<td> <ol>";
+        echo "<li>" . $question->option_1 . "</li>";
+        echo "<li>" . $question->option_2 . "</li>";
+        echo "<li>" . $question->option_3 . "</li>";
+        echo "<li>" . $question->option_4 . "</li>";
+        echo "<ol> </td>";
         echo "<td>$question->correct_ans</td>";
+        echo "<td>$question->grade</td>";
         echo "<td>
                 <a href='/Quiz/Question/details/$question->id'> Details</a>
                 </td>";

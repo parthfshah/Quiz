@@ -3,8 +3,12 @@ class Question extends Controller
 {
     public function __construct()
     {
-        $this->quizModel = $this->model('quizModel');
-        $this->adminModel = $this->model('adminModel');
+        if (!$_SESSION['admin']) {
+            header('Location: /Quiz/Home');
+        } else {
+            $this->quizModel = $this->model('quizModel');
+            $this->studentModel = $this->model('studentModel');
+        }
     }
 
     public function details($question_id = null)
@@ -22,7 +26,7 @@ class Question extends Controller
 
     public function create()
     {
-        $quizes =  $this->adminModel->getQuizes();
+        $quizes =  $this->studentModel->getQuizes();
         $data = [
             'quizes' => $quizes
         ];
@@ -37,7 +41,7 @@ class Question extends Controller
                 'option_3' => trim($_POST['option_3']),
                 'option_4' => trim($_POST['option_4']),
                 'correct_ans' => trim($_POST['correct_ans']),
-
+                'grade' => trim($_POST['grade'])
             ];
             if ($this->quizModel->createQuestion($data)) {
                 header('Location: /Quiz/Admin/Questions');
@@ -49,7 +53,7 @@ class Question extends Controller
     {
         if ($question_id != null) {
             $question = $this->quizModel->getQuestion($question_id);
-            $quizes =  $this->adminModel->getQuizes();
+            $quizes =  $this->studentModel->getQuizes();
 
             $data = [
                 'question' => $question,
@@ -67,6 +71,7 @@ class Question extends Controller
                     'option_3' => trim($_POST['option_3']),
                     'option_4' => trim($_POST['option_4']),
                     'correct_ans' => trim($_POST['correct_ans']),
+                    'grade' => trim($_POST['grade'])
                 ];
                 if ($this->quizModel->updateQuestion($data)) {
                     header('Location: /Quiz/Admin/Questions');

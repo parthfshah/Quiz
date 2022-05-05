@@ -51,6 +51,10 @@ $quizes = $data['quizes'];
         <label for="correct">Correct Ans</label>
         <input name="correct_ans" type="text" class="form-control" id="correct">
     </div>
+    <div class=" form-group">
+        <label for="correct">Grade</label>
+        <input name="grade" type="number" class="form-control" id="grade">
+    </div>
 
     <div class=" pt-1 mb-4">
         <button class="btn btn-primary" type="submit" name="create">Create Question</button>
