@@ -25,6 +25,39 @@ class quizModel
         }
     }
 
+    public function editQuiz($data)
+    {
+        $this->db->query("UPDATE quizes set name=:name where quiz_id=:quiz_id");
+        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':quiz_id', $data['quiz_id']);
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function createQuestion($data)
+    {
+        $this->db->query("INSERT into questions 
+        (quiz_id, text, option_1, option_2, option_3, option_4, correct_ans) values
+        (:quiz_id, :text, :option_1, :option_2, :option_3, :option_4, :correct_ans)
+        ");
+        $this->db->bind(':quiz_id', $data['quiz_id']);
+        $this->db->bind(':text', $data['text']);
+        $this->db->bind(':option_1', $data['option_1']);
+        $this->db->bind(':option_2', $data['option_2']);
+        $this->db->bind(':option_3', $data['option_3']);
+        $this->db->bind(':option_4', $data['option_4']);
+        $this->db->bind(':correct_ans', $data['correct_ans']);
+
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function updateQuestion($data)
     {
         $this->db->query("UPDATE questions SET quiz_id=:quiz_id, text=:text, option_1=:option_1, option_2=:option_2, option_3=:option_3, option_4=:option_4, correct_ans =:correct_ans where id=:id");
@@ -48,6 +81,13 @@ class quizModel
     {
         $this->db->query("DELETE from quizes where quiz_id = :quiz_id");
         $this->db->bind(':quiz_id', $quiz_id);
+        return $this->db->execute();
+    }
+
+    public function deleteQuestion($question_id)
+    {
+        $this->db->query("DELETE from questions where id = :question_id");
+        $this->db->bind(':question_id', $question_id);
         return $this->db->execute();
     }
 

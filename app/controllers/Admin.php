@@ -47,7 +47,17 @@ class Admin extends Controller
     public function editQuiz($quiz_id)
     {
         $quiz  = $this->quizModel->getQuiz($quiz_id);
-        var_dump($quiz);
+        if (!isset($_POST['edit'])) {
+            $this->view('Quiz/edit', $quiz);
+        } else {
+            $data = [
+                'name' => trim($_POST['name']),
+                'quiz_id' => $quiz_id
+            ];
+            if ($this->quizModel->editQuiz($data)) {
+                header('Location: /Quiz/Admin/Quizes');
+            }
+        }
     }
 
     public function deleteQuiz($quiz_id)

@@ -1,7 +1,8 @@
 <?php require APPROOT . '/views/includes/header.php';
 ?>
+<a href="/Quiz/question/create" class="btn btn-primary">Add a new Question</a>
 
-<table class="table table-bordered">
+<table class="table table-bordered mt-2">
     <tr>
         <td>ID</td>
         <td>Quiz ID</td>
@@ -39,12 +40,14 @@
                 <a href='/Quiz/Question/update/$question->id'> Update</a>
                 </td>";
         echo "<td>
-                <a href='/Quiz/Question/delete/$question->id'> Delete</a>
+                <a href='/Quiz/Question/delete/$question->id' onclick='return confirmDelete()'> Delete</a>
                 </td>";
         echo "</tr>";
     }
     ?>
 </table>
+
+
 
 
 

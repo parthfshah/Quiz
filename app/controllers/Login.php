@@ -1,8 +1,8 @@
 <?php
-    include_once dirname(APPROOT).'/vendor/sonata-project/google-authenticator/src/FixedBitNotation.php';
-    include_once dirname(APPROOT).'/vendor/sonata-project/google-authenticator/src/GoogleAuthenticatorInterface.php';
-    include_once dirname(APPROOT).'/vendor/sonata-project/google-authenticator/src/GoogleAuthenticator.php';
-    include_once dirname(APPROOT).'/vendor/sonata-project/google-authenticator/src/GoogleQrUrl.php';
+include_once dirname(APPROOT) . '/vendor/sonata-project/google-authenticator/src/FixedBitNotation.php';
+include_once dirname(APPROOT) . '/vendor/sonata-project/google-authenticator/src/GoogleAuthenticatorInterface.php';
+include_once dirname(APPROOT) . '/vendor/sonata-project/google-authenticator/src/GoogleAuthenticator.php';
+include_once dirname(APPROOT) . '/vendor/sonata-project/google-authenticator/src/GoogleQrUrl.php';
 
 
 class Login extends Controller
@@ -15,75 +15,67 @@ class Login extends Controller
 
     public function index()
     {
-        if(!isset($_POST['login'])){
+        if (!isset($_POST['login'])) {
             $this->view('Login/index');
-        }
-        else{
+        } else {
             $user = $this->loginModel->getUser($_POST['username']);
-            
-            if($user != null){
+
+            if ($user != null) {
                 $hashed_pass = $user->pass_hash;
                 $password = $_POST['password'];
                 $secret = $user->secret;
                 $code = $_POST['code'];
-                if(password_verify($password,$hashed_pass)){
-                    //echo '<meta http-equiv="Refresh" content="2; url=/MVC/">';
-                    if($user->secret != null){
-                        if(!empty($code)) {
-                            if(check($secret, $code)){
+                if (password_verify($password, $hashed_pass)) {
+                    if ($user->secret != null) {
+                        if (!empty($code)) {
+                            if (check($secret, $code)) {
                                 $this->createSession($user);
                                 $data = [
                                     'msg' => "Welcome, $user->username!",
                                 ];
-                                $this->view('Home/home',$data);
-                            }
-                            else{
+                                $this->view('Home/home', $data);
+                            } else {
                                 $data = [
                                     'msg' => "2FA Code incorect/expired for $user->username",
                                 ];
-                                $this->view('Login/index',$data); 
+                                $this->view('Login/index', $data);
                             }
-                        }
-                        else{
+                        } else {
                             $data = [
                                 'msg' => "Please enter the 2FA code for $user->username",
                             ];
-                            $this->view('Login/index',$data); 
+                            $this->view('Login/index', $data);
                         }
-                        
-                    }
-                    else{
+                    } else {
                         $this->createSession($user);
-                            $data = [
-                                'msg' => "Welcome, $user->username!",
-                            ];
-                            $this->view('Home/home',$data);
+                        // $data = [
+                        //     'msg' => "Welcome, $user->username!",
+                        // ];
+                        // $this->view('Home/home', $data);
+                        header('Location: /Quiz');
                     }
-                }
-                else{
+                } else {
                     $data = [
                         'msg' => "Password incorrect! for $user->username",
                     ];
-                    $this->view('Login/index',$data);
+                    $this->view('Login/index', $data);
                 }
-            }
-            else{
+            } else {
                 $data = [
-                    'msg' => "User: ". $_POST['username'] ." does not exists",
+                    'msg' => "User: " . $_POST['username'] . " does not exists",
                 ];
-                $this->view('Login/index',$data);
+                $this->view('Login/index', $data);
             }
         }
     }
 
     public function create()
     {
-        if(!isset($_POST['signup'])){
+        if (!isset($_POST['signup'])) {
             $this->view('Login/create');
-        }
-        else{
+        } else {
             $user = $this->loginModel->getUser($_POST['username']);
-            if($user == null){
+            if ($user == null) {
                 $data = [
                     'username' => trim($_POST['username']),
                     'email' => $_POST['email'],
@@ -97,62 +89,61 @@ class Login extends Controller
                     'msg' => '',
                     'email_error' => ''
                 ];
-                if($this->validateData($data)){
-                    if($this->loginModel->createUser($data)){
+                if ($this->validateData($data)) {
+                    if ($this->loginModel->createUser($data)) {
                         echo '
                         <div class="text-center">
                         <div class="spinner-border" role="status">
-                          <span class="sr-only">Please wait creating the account for '.trim($_POST["username"]).'</span>
+                          <span class="sr-only">Please wait creating the account for ' . trim($_POST["username"]) . '</span>
                         </div>
                       </div>';
                         echo '<meta http-equiv="Refresh" content="2; url=/Quiz/Login/">';
-                 }
-                } 
-            }
-            else{
+                    }
+                }
+            } else {
                 $data = [
-                    'msg' => "User: ". $_POST['username'] ." already exists",
+                    'msg' => "User: " . $_POST['username'] . " already exists",
                 ];
-                $this->view('Login/create',$data);
+                $this->view('Login/create', $data);
             }
-            
         }
     }
 
-    public function validateData($data){
-        if(empty($data['username'])){
+    public function validateData($data)
+    {
+        if (empty($data['username'])) {
             $data['username_error'] = 'Username can not be empty';
         }
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $data['email_error'] = 'Please check your email and try again';
         }
-        if(strlen($data['pass']) < 6){
+        if (strlen($data['pass']) < 6) {
             $data['password_len_error'] = 'Password can not be less than 6 characters';
         }
-        if($data['pass'] != $data['pass_verify']){
+        if ($data['pass'] != $data['pass_verify']) {
             $data['password_match_error'] = 'Password does not match';
         }
 
-        if(empty($data['username_error']) && empty($data['password_error']) && empty($data['password_len_error']) && empty($data['password_match_error'])){
+        if (empty($data['username_error']) && empty($data['password_error']) && empty($data['password_len_error']) && empty($data['password_match_error'])) {
             return true;
-        }
-        else{
-            $this->view('Login/create',$data);
+        } else {
+            $this->view('Login/create', $data);
         }
     }
 
-    public function createSession($user){
+    public function createSession($user)
+    {
         $_SESSION['user_id'] = $user->id;
         $_SESSION['user_username'] = $user->username;
 
-        
 
-        if($user->isAdmin == 1){
+
+        if ($user->isAdmin == 1) {
             $_SESSION['admin'] = true;
         }
-    
+
         $user = $this->loginModel->getUser($_SESSION['user_username']);
-        
+
         //user without code
         if ($user->secret == null) {
             $_SESSION['secret'] = $this->generateSecret();
@@ -163,30 +154,32 @@ class Login extends Controller
         }
     }
 
-    function generateSecret() {
+    function generateSecret()
+    {
         $g = new \Google\Authenticator\GoogleAuthenticator();
         $secret = $g->generateSecret();
 
         return $secret;
     }
 
-    function check($secret, $code) {
+    function check($secret, $code)
+    {
         $g = new \Sonata\GoogleAuthenticator\GoogleAuthenticator();
-        
+
         if ($g->checkCode($secret, $code)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public function logout(){
+    public function logout()
+    {
         unset($_SESSION['user_id']);
         unset($_SESSION['user_username']);
         unset($_SESSION['secret']);
         session_destroy();
-        
+
         echo '<meta http-equiv="Refresh" content="1; url=/Quiz/Login/">';
     }
 }
